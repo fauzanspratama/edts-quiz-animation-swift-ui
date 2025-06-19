@@ -12,6 +12,8 @@ struct HeartAnimationView: View {
     @State private var scale: CGFloat = 0.8
     @State private var rotation = 0.0
     
+    let transitionAnimation: Animation = .spring(response: 0.4, dampingFraction: 0.8)
+    
     var body: some View {
         
         VStack {
@@ -23,7 +25,6 @@ struct HeartAnimationView: View {
             
             VStack(spacing: 16) {
                 
-                // Heart Button
                 Button(action: {
                     
                     withAnimation(Animation.timingCurve(1, -0.4, 0.35, 0.95, duration: 1)) {
@@ -32,17 +33,16 @@ struct HeartAnimationView: View {
                         scale = scale == 0.8 ? 1 : 0.8
                     }
                 }) {
-                    Image(systemName: "heart.fill")
+                    Image(systemName: isLiked ? "heart.fill" : "heart")
                         .font(.system(size: 40))
-                        .foregroundColor(isLiked ? .red : .gray8)
-                        .opacity(isLiked ? 1.0 : 0.5)
-                        .rotationEffect(.degrees(rotation))
                         .frame(width: 80, height: 80)
+                        .foregroundColor(isLiked ? .red : .gray6)
                         .background(
                             Circle()
                                 .fill(isLiked ? Color.red.opacity(0.2) : Color.gray4)
                         )
                 }
+                .rotationEffect(.degrees(rotation))
                 .scaleEffect(scale)
                 .animation(Animation.timingCurve(1, -0.4, 0.35, 0.95, duration: 1), value: scale)
                 
@@ -53,7 +53,7 @@ struct HeartAnimationView: View {
                         .foregroundColor(.red)
                         .transition(.asymmetric(
                             insertion: .move(edge: .bottom).combined(with: .opacity),
-                            removal: .move(edge: .top).combined(with: .opacity)
+                            removal: .move(edge: .bottom).combined(with: .opacity)
                         ))
                     
                     Button(action: {}) {
@@ -74,7 +74,7 @@ struct HeartAnimationView: View {
                         .font(.system(size: 20, weight: .medium))
                         .foregroundColor(Color.gray6)
                         .transition(.asymmetric(
-                            insertion: .move(edge: .top).combined(with: .opacity),
+                            insertion: .move(edge: .bottom).combined(with: .opacity),
                             removal: .move(edge: .bottom).combined(with: .opacity)
                         ))
                     
